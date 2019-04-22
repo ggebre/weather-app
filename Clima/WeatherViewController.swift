@@ -70,7 +70,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
                 // did it manage to get the data from the server?
                 
                 let weatherJSON : JSON = JSON(response.result.value!)
-                print(weatherJSON)
+                //print(weatherJSON)
                 self.updateWeatherData(json: weatherJSON)
             } else {
                 print("Error \(String(describing: response.result.error))")
@@ -94,8 +94,9 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
         if let tempResults = json["list"][0]["main"]["temp"].double{
       //if let tempResults = json["main"]["temp"].double {
         
-        weatherDataModel.temperature = Int(tempResults - 273.15)
-            //print(weatherDataModel.temperature)
+        //weatherDataModel.temperature = Int(tempResults - 273.15)
+            weatherDataModel.temperature.append( Int(tempResults - 273.15))
+            print(tempResults)
         //weatherDataModel.city = json["name"].stringValue
         weatherDataModel.city = json["city"]["name"].stringValue
         //weatherDataModel.condition = json["weather"][0]["id"].intValue
@@ -118,17 +119,17 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, Change
     
     func updateUIWithWeatherData(){
         cityLabel.text = weatherDataModel.city
-        temperatureLabel.text = "\(weatherDataModel.temperature)°"
+        temperatureLabel.text = "\(weatherDataModel.temperature[0])°"
         weatherIcon.image = UIImage(named: weatherDataModel.weatherIconName)
     }
     
     func temperatureScaleSelector (isFahrenheit: Bool){
         if isFahrenheit {
-            let temperatureInFahrenheit = 32 + Double(weatherDataModel.temperature) * 9/5
-            print(temperatureInFahrenheit)
+            let temperatureInFahrenheit = 32 + Double(weatherDataModel.temperature[0]) * 9/5
+            
             temperatureLabel.text = String(format: "%.1f", temperatureInFahrenheit)
         } else {
-            temperatureLabel.text = "\(weatherDataModel.temperature)°"
+            temperatureLabel.text = "\(weatherDataModel.temperature[0])°"
         }
     }
     func updateForcastFiveDays(){
